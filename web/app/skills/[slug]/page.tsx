@@ -4,89 +4,120 @@ import { verticals } from "@/content/verticals";
 
 type Props = { params: { slug: string } };
 
+const GITHUB_BASE = "https://github.com/spooky-may/project-jane-street/tree/main/skills/plugins/vertical-plugins";
+
 export function generateStaticParams() {
   return verticals.map((v) => ({ slug: v.slug }));
 }
 
-export default function SkillPage({ params }: Props) {
-  const vertical = verticals.find((v) => v.slug === params.slug);
-  if (!vertical) notFound();
+export default function VerticalPage({ params }: Props) {
+  const v = verticals.find((v) => v.slug === params.slug);
+  if (!v) notFound();
+
+  const githubUrl = `${GITHUB_BASE}/${v.slug}`;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16">
+    <div className="max-w-6xl mx-auto px-6 py-16">
       {/* Breadcrumb */}
-      <nav className="text-sm text-text-muted mb-8">
-        <Link href="/" className="hover:text-text transition-colors">
-          Home
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-text">{vertical.title}</span>
+      <nav className="text-sm text-text-muted mb-8 flex items-center gap-2">
+        <Link href="/" className="hover:text-text transition-colors">Home</Link>
+        <span>/</span>
+        <Link href="/skills" className="hover:text-text transition-colors">Skills</Link>
+        <span>/</span>
+        <span className="text-text">{v.title}</span>
       </nav>
 
-      {/* Header */}
+      {/* Vertical header */}
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-text mb-3">{vertical.title}</h1>
-        <p className="text-text-muted text-lg leading-relaxed max-w-2xl">
-          {vertical.description}
-        </p>
+        <div className="flex items-start gap-3 mb-3 flex-wrap">
+          <h1 className="text-4xl font-bold text-text">{v.title}</h1>
+          <span className="text-xs font-mono text-text-subtle bg-surface-alt border border-border px-2 py-1 rounded self-start mt-2">
+            v{v.version}
+          </span>
+        </div>
+        <p className="text-text-muted text-xl mb-3 max-w-2xl">{v.tagline}</p>
+        <p className="text-text-muted max-w-2xl leading-relaxed mb-7">{v.description}</p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-primary text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-primary-dark transition-colors text-sm"
+          >
+            Download from GitHub →
+          </a>
+          <a
+            href="https://claude.ai/customize/skills"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-border text-text-muted font-medium px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+          >
+            Upload to Claude Skills
+          </a>
+          <Link href="/docs" className="text-sm text-text-muted hover:text-primary transition-colors self-center">
+            How to install →
+          </Link>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Main content */}
-        <div className="md:col-span-2 flex flex-col gap-8">
-          {/* Commands */}
-          <section>
-            <h2 className="text-base font-semibold text-text mb-4">
-              Commands
-            </h2>
-            <div className="flex flex-col gap-2">
-              {vertical.commands.map((cmd) => (
-                <div
-                  key={cmd}
-                  className="flex items-center gap-3 bg-surface border border-border rounded-lg px-4 py-3"
-                >
-                  <code className="font-mono text-sm text-primary font-medium">
-                    {cmd}
-                  </code>
-                </div>
-              ))}
-            </div>
-          </section>
+      {/* Install command */}
+      <div className="bg-surface-alt border border-border rounded-xl p-5 mb-12">
+        <div className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-2">
+          CLI Install
         </div>
+        <code className="font-mono text-sm text-text">{v.installCommand}</code>
+      </div>
 
-        {/* Sidebar */}
-        <aside className="flex flex-col gap-5">
-          {/* Install */}
-          <div className="bg-surface border border-border rounded-xl p-5">
-            <h3 className="text-sm font-semibold text-text mb-3">Install</h3>
-            <code className="block font-mono text-xs bg-surface-alt text-text rounded-lg px-3 py-3 leading-relaxed break-all">
-              {vertical.installCommand}
-            </code>
-            <p className="text-text-subtle text-xs mt-3">
-              Requires Claude for Work
-            </p>
-          </div>
+      {/* Skills grid */}
+      <div>
+        <h2 className="text-xl font-semibold text-text mb-6">
+          {v.skills.length} skills in this vertical
+        </h2>
+        <div className="grid sm:grid-cols-2 gap-5">
+          {v.skills.map((s) => (
+            <Link
+              key={s.slug}
+              href={`/skills/${v.slug}/${s.slug}`}
+              className="group bg-surface border border-border rounded-xl p-5 hover:border-primary hover:shadow-md transition-all flex flex-col gap-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-text group-hover:text-primary transition-colors">
+                  {s.name}
+                </h3>
+                <code className="font-mono text-xs text-text-subtle bg-surface-alt px-2 py-0.5 rounded shrink-0">
+                  /{s.slug}
+                </code>
+              </div>
+              <p className="text-text-muted text-sm leading-relaxed flex-1 line-clamp-3">
+                {s.description}
+              </p>
+              <div className="text-xs text-text-subtle">
+                <span className="font-medium text-text-muted">Best for: </span>{s.bestFor}
+              </div>
+              <div className="text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                View full details + download →
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-          {/* Audience */}
-          <div className="bg-surface border border-border rounded-xl p-5">
-            <h3 className="text-sm font-semibold text-text mb-2">Audience</h3>
-            <span className="bg-primary-light text-primary text-xs font-medium rounded-full px-2.5 py-1">
-              {vertical.audience === "decision-maker"
-                ? "Decision Makers"
-                : vertical.audience === "developer"
-                ? "Developers"
-                : "Both"}
-            </span>
-          </div>
-
-          {/* Back */}
-          <Link
-            href="/"
-            className="text-sm text-text-muted hover:text-text transition-colors text-center"
-          >
-            ← All verticals
-          </Link>
-        </aside>
+      {/* Other verticals */}
+      <div className="mt-20">
+        <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wide mb-4">Other verticals</h2>
+        <div className="flex flex-wrap gap-2">
+          {verticals
+            .filter((other) => other.slug !== v.slug)
+            .map((other) => (
+              <Link
+                key={other.slug}
+                href={`/skills/${other.slug}`}
+                className="bg-surface border border-border text-text-muted text-sm px-3 py-1.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
+              >
+                {other.title}
+              </Link>
+            ))}
+        </div>
       </div>
     </div>
   );

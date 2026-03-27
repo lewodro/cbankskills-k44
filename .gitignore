@@ -65,6 +65,3 @@ coverage/
 *.tmp
 *.temp
 .cache/
-
-# Duplicate source folder (legacy, superseded by skills/)
-financial-services/
