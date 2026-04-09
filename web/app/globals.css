@@ -3,20 +3,93 @@
 @tailwind utilities;
 
 :root {
-  --background: #f9f7f4;
-  --foreground: #0f172a;
+  --bg:            #FFFFFF;
+  --s1:            #F5F9F7;
+  --s2:            #EBF3EE;
+  --s3:            #DCEEe4;
+  --b0:            rgba(0,0,0,0.07);
+  --b1:            rgba(0,0,0,0.11);
+  --b2:            rgba(0,0,0,0.20);
+  --accent:        #2E8B57;
+  --accent-dim:    rgba(46,139,87,0.09);
+  --accent-mid:    rgba(46,139,87,0.22);
+  --text:          #0D1F14;
+  --sub:           #527A62;
+  --faint:         #B8D4C2;
+
+  /* bridge geist package variables → design token names */
+  --font-sans:  var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono:  var(--font-geist-mono, ui-monospace, monospace);
+  /* --font-serif is set directly by Instrument_Serif.variable on <html> */
 }
 
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── dot grid ── */
+.dot-grid::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(46,139,87,0.18) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── noise texture ── */
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* content sits above background textures */
+.rel { position: relative; z-index: 1; }
+
+/* ── scroll fade-up ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.anim              { opacity: 0; }
+.anim.visible      { animation: fadeUp 0.6s ease forwards; }
+.anim-d1.visible   { animation-delay: 0.05s; }
+.anim-d2.visible   { animation-delay: 0.15s; }
+.anim-d3.visible   { animation-delay: 0.25s; }
+.anim-d4.visible   { animation-delay: 0.35s; }
+.anim-d5.visible   { animation-delay: 0.45s; }
+.anim-d6.visible   { animation-delay: 0.55s; }
+
+/* ── blinking cursor ── */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.t-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 13px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
+  .font-serif   { font-family: var(--font-serif, ui-serif, serif); }
+  .font-sans    { font-family: var(--font-sans, ui-sans-serif, sans-serif); }
+  .font-mono    { font-family: var(--font-mono, ui-monospace, monospace); }
 }
