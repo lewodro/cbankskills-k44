@@ -1,276 +1,516 @@
 import Link from "next/link";
 import { verticals } from "@/content/verticals";
+import AnimSection from "@/components/AnimSection";
+import Terminal from "@/components/Terminal";
 
 const SKILLS_GITHUB = "https://github.com/spooky-may/project-jane-street/tree/main/skills";
 
 const totalSkills = verticals.reduce((acc, v) => acc + v.skills.length, 0);
 
-const featuredSkills = [
-  { vertical: "investment-banking", skill: "cim-builder",   label: "CIM Builder",    example: "Draft a 60-page CIM from a data room in hours" },
-  { vertical: "equity-research",    skill: "morning-note",   label: "Morning Note",   example: "Post-earnings note ready before the market opens" },
-  { vertical: "private-equity",     skill: "ic-memo",        label: "IC Memo",        example: "From DD findings to IC-ready memo in one command" },
-  { vertical: "financial-analysis", skill: "dcf-model",      label: "DCF Model",      example: "5-year DCF with WACC sensitivity from a 10-K" },
-  { vertical: "fund-admin",         skill: "nav-tieout",     label: "NAV Tie-Out",    example: "Catch LP statement errors before they reach investors" },
-  { vertical: "wealth-management",  skill: "financial-plan", label: "Financial Plan", example: "Full retirement plan from a client intake form" },
+const FEATURED = [
+  { vertical: "IB",           slug: "investment-banking", skill: "cim-builder",   cmd: "/cim-builder",    name: "CIM Builder",    desc: "Draft a 60-page CIM from a data room in hours." },
+  { vertical: "Equity",       slug: "equity-research",    skill: "morning-note",   cmd: "/morning-note",   name: "Morning Note",   desc: "Post-earnings research note before the market opens." },
+  { vertical: "PE",           slug: "private-equity",     skill: "ic-memo",        cmd: "/ic-memo",        name: "IC Memo",        desc: "From DD findings to IC-ready memo in one command." },
+  { vertical: "Fin Analysis", slug: "financial-analysis", skill: "dcf-model",      cmd: "/dcf-model",      name: "DCF Model",      desc: "5-year DCF with WACC sensitivity from a 10-K." },
+  { vertical: "Fund Admin",   slug: "fund-admin",         skill: "nav-tieout",     cmd: "/nav-tieout",     name: "NAV Tie-Out",    desc: "Catch LP statement errors before they reach investors." },
+  { vertical: "Wealth",       slug: "wealth-management",  skill: "financial-plan", cmd: "/financial-plan", name: "Financial Plan", desc: "Full retirement plan from a client intake form." },
+];
+
+const VERTICAL_ICONS: Record<string, string> = {
+  "investment-banking": "🏦",
+  "equity-research":    "📊",
+  "private-equity":     "🔬",
+  "financial-analysis": "📈",
+  "fund-admin":         "⚖️",
+  "wealth-management":  "💼",
+  "operations":         "⚙️",
+};
+
+const STATS = [
+  { num: totalSkills, label: "production-ready skills" },
+  { num: 7,           label: "financial verticals" },
+  { num: 10,          label: "end-to-end agents" },
+  { num: 0,           suffix: "  lines to install", label: "of code required" },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-surface border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-24 flex flex-col items-center text-center gap-7">
-          <span className="inline-flex items-center gap-2 bg-primary-light text-primary text-xs font-medium rounded-full px-3 py-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
-            {totalSkills} skills · 7 verticals · Apache-2.0
-          </span>
+      {/* ── HERO ── */}
+      <section style={{ maxWidth: 1000, margin: "0 auto", padding: "100px 40px 80px", textAlign: "center" }}>
+        <AnimSection className="anim-d1">
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            color: "var(--sub)",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            border: "1px solid var(--b1)",
+            padding: "5px 14px",
+            borderRadius: 100,
+            marginBottom: 28,
+            background: "var(--s1)",
+          }}>
+            <span style={{ width: 5, height: 5, background: "var(--accent)", borderRadius: "50%", display: "inline-block" }} />
+            {totalSkills} production-ready skills · 7 verticals
+          </div>
+        </AnimSection>
 
-          <h1 className="text-5xl sm:text-6xl font-bold text-text tracking-tight max-w-3xl text-balance leading-tight">
-            Claude skills built for{" "}
-            <span className="text-primary">financial services</span>
+        <AnimSection className="anim-d2">
+          <h1 style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "clamp(44px, 7vw, 78px)",
+            fontWeight: 400,
+            lineHeight: 1.08,
+            letterSpacing: "-0.02em",
+            color: "var(--text)",
+            marginBottom: 20,
+          }}>
+            Claude skills built for<br />
+            <em style={{
+              fontStyle: "italic",
+              background: "linear-gradient(135deg, #1a5c38 0%, #2E8B57 55%, #52b57c 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              financial services
+            </em>
           </h1>
+        </AnimSection>
 
-          <p className="text-text-muted text-xl max-w-2xl text-balance leading-relaxed">
-            Production-ready Claude skills for investment banking, equity research,
-            private equity, fund administration, and wealth management.
-            Download a skill, upload to Claude — start in minutes.
+        <AnimSection className="anim-d3">
+          <p style={{
+            fontSize: 17,
+            color: "var(--sub)",
+            maxWidth: 520,
+            margin: "0 auto 36px",
+            lineHeight: 1.65,
+            fontWeight: 300,
+          }}>
+            Production-ready skills for investment banking, equity research,
+            private equity, and wealth management. Download, upload, start in minutes.
           </p>
+        </AnimSection>
 
-          <div className="flex flex-wrap items-center gap-3 justify-center">
+        <AnimSection className="anim-d4">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
             <Link
               href="/skills"
-              className="bg-primary text-white font-semibold px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors text-sm"
+              style={{
+                background: "var(--accent)",
+                color: "#fff",
+                padding: "11px 22px",
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: "none",
+                display: "inline-block",
+              }}
             >
               Browse all skills →
             </Link>
             <Link
               href="/docs"
-              className="border border-border text-text-muted font-medium px-6 py-3 rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+              style={{
+                background: "transparent",
+                color: "var(--sub)",
+                border: "1px solid var(--b1)",
+                padding: "11px 22px",
+                borderRadius: 8,
+                fontSize: 14,
+                textDecoration: "none",
+                display: "inline-block",
+              }}
             >
               How to install
             </Link>
           </div>
+        </AnimSection>
 
-          {/* Terminal preview */}
-          <div className="w-full max-w-2xl bg-[#1a1a2e] rounded-xl border border-[#2a2a4a] p-4 text-left mt-2">
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-              <span className="ml-2 text-xs text-white/30 font-mono">claude.ai</span>
-            </div>
-            <div className="font-mono text-sm space-y-1.5">
-              <p className="text-white/40"># After uploading the investment-banking skill ZIP</p>
-              <p>
-                <span className="text-primary font-semibold">›</span>{" "}
-                <span className="text-white">/cim-builder Draft CIM for $120M EBITDA industrial SaaS — data room attached</span>
-              </p>
-              <p className="text-white/50">  Drafting CIM: executive summary, business overview, financial analysis...</p>
-              <p className="text-white/50">  Building exhibits from attached model...</p>
-              <p className="text-green-400/80">  ✓ CIM ready — 67 pages. Export to Word or PDF.</p>
-            </div>
-          </div>
-        </div>
+        <AnimSection className="anim-d5">
+          <Terminal />
+        </AnimSection>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 bg-surface-alt border-b border-border">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-semibold text-text mb-2">How it works</h2>
-            <p className="text-text-muted">Three steps. No setup. No API keys required.</p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              {
-                step: "01",
-                title: "Find your skill",
-                desc: "Browse 55 skills across 7 financial services verticals. Each skill is purpose-built for a specific workflow — DCF modeling, CIM drafting, earnings analysis, KYC parsing, and more.",
-                cta: "Browse skills",
-                href: "/skills",
-                external: false,
-              },
-              {
-                step: "02",
-                title: "Download the ZIP",
-                desc: "Each skill is a self-contained ZIP file. Download the skill you need from GitHub — one skill at a time, or the entire vertical. No build step, no dependencies.",
-                cta: "View skills on GitHub",
-                href: SKILLS_GITHUB,
-                external: true,
-              },
-              {
-                step: "03",
-                title: "Upload to Claude",
-                desc: "Go to claude.ai/customize/skills, upload your ZIP, and the skill becomes a slash command in Claude. Works with Claude for Work — Teams or Enterprise.",
-                cta: "Open Claude Skills",
-                href: "https://claude.ai/customize/skills",
-                external: true,
-              },
-            ].map((item) => (
-              <div key={item.step} className="bg-surface rounded-xl border border-border p-6 flex flex-col gap-4">
-                <div className="text-3xl font-bold text-primary/20 font-mono">{item.step}</div>
-                <h3 className="font-semibold text-text text-lg">{item.title}</h3>
-                <p className="text-text-muted text-sm leading-relaxed flex-1">{item.desc}</p>
-                {item.external ? (
-                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium hover:underline">
-                    {item.cta} →
-                  </a>
-                ) : (
-                  <Link href={item.href} className="text-primary text-sm font-medium hover:underline">
-                    {item.cta} →
-                  </Link>
-                )}
+      {/* ── STATS ── */}
+      <div style={{ borderTop: "1px solid var(--b0)", borderBottom: "1px solid var(--b0)", background: "var(--s1)" }}>
+        <div style={{
+          maxWidth: 900,
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+        }}>
+          {STATS.map((s, i) => (
+            <div
+              key={i}
+              style={{
+                padding: "36px 32px",
+                borderRight: i < STATS.length - 1 ? "1px solid var(--b0)" : undefined,
+                textAlign: "center",
+              }}
+            >
+              <div style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: 46,
+                fontWeight: 400,
+                lineHeight: 1,
+                color: "var(--text)",
+                marginBottom: 6,
+              }}>
+                {s.num}
+                {s.suffix && <span style={{ color: "var(--accent)", fontSize: 18 }}>{s.suffix}</span>}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats strip */}
-      <section className="bg-surface border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-wrap justify-center gap-10">
-          {[
-            { value: "55", label: "production-ready skills" },
-            { value: "7",  label: "financial verticals" },
-            { value: "10", label: "end-to-end agents" },
-            { value: "11", label: "MCP data connectors" },
-            { value: "0",  label: "lines of code to install" },
-          ].map((s) => (
-            <div key={s.label} className="flex flex-col items-center gap-0.5 text-center">
-              <span className="text-3xl font-bold text-primary">{s.value}</span>
-              <span className="text-sm text-text-muted">{s.label}</span>
+              <div style={{ fontSize: 12, color: "var(--sub)", letterSpacing: "0.03em" }}>
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      {/* Featured skills */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <h2 className="text-2xl font-semibold text-text mb-1">Featured skills</h2>
-              <p className="text-text-muted">The most-used skills across all verticals.</p>
-            </div>
-            <Link href="/skills" className="text-sm text-primary hover:underline font-medium">
-              See all {totalSkills} →
-            </Link>
+      {/* ── HOW IT WORKS ── */}
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "96px 40px" }}>
+        <AnimSection>
+          <div style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--accent)",
+            marginBottom: 16,
+          }}>
+            How it works
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {featuredSkills.map((f) => {
-              const v = verticals.find((v) => v.slug === f.vertical)!;
-              return (
-                <Link
-                  key={f.skill}
-                  href={`/skills/${f.vertical}/${f.skill}`}
-                  className="group bg-surface border border-border rounded-xl p-5 hover:border-primary hover:shadow-md transition-all flex flex-col gap-3"
-                >
-                  <span className="bg-primary-light text-primary text-xs font-medium rounded-full px-2 py-0.5 self-start">
-                    {v.title}
+          <h2 style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "clamp(30px, 4vw, 44px)",
+            fontWeight: 400,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            color: "var(--text)",
+            marginBottom: 14,
+          }}>
+            Three steps. No setup.
+          </h2>
+          <p style={{ fontSize: 15, color: "var(--sub)", maxWidth: 480, lineHeight: 1.65, fontWeight: 300 }}>
+            No API keys. No build step. No dependencies.
+          </p>
+        </AnimSection>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: 2,
+          marginTop: 56,
+        }}>
+          {[
+            { n: "01", title: "Find your skill", desc: "Browse " + totalSkills + " skills across 7 financial services verticals. Each skill is purpose-built for a specific workflow.", href: "/skills", cta: "Browse skills →" },
+            { n: "02", title: "Download the ZIP", desc: "Each skill is a self-contained ZIP file. Download one skill or an entire vertical from GitHub.", href: SKILLS_GITHUB, cta: "View on GitHub →", external: true },
+            { n: "03", title: "Upload to Claude", desc: "Go to claude.ai/customize/skills, upload your ZIP. The skill becomes a slash command instantly.", href: "https://claude.ai/customize/skills", cta: "Open Claude Skills →", external: true },
+          ].map((step, i) => (
+            <AnimSection key={step.n} className={`anim-d${i + 1}`}>
+              <div style={{
+                background: "var(--s1)",
+                padding: "32px 28px",
+                border: "1px solid var(--b0)",
+                borderRadius: 12,
+                height: "100%",
+              }}>
+                <div style={{
+                  fontFamily: "var(--font-serif)",
+                  fontSize: 72,
+                  fontWeight: 400,
+                  color: "var(--faint)",
+                  lineHeight: 1,
+                  marginBottom: 20,
+                  letterSpacing: "-0.03em",
+                }}>
+                  {step.n}
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: "var(--text)", marginBottom: 8 }}>
+                  {step.title}
+                </div>
+                <div style={{ fontSize: 13, color: "var(--sub)", lineHeight: 1.65, fontWeight: 300, marginBottom: 16 }}>
+                  {step.desc}
+                </div>
+                {step.external ? (
+                  <a href={step.href} target="_blank" rel="noopener noreferrer"
+                    style={{ color: "var(--accent)", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
+                    {step.cta}
+                  </a>
+                ) : (
+                  <Link href={step.href}
+                    style={{ color: "var(--accent)", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
+                    {step.cta}
+                  </Link>
+                )}
+              </div>
+            </AnimSection>
+          ))}
+        </div>
+      </div>
+
+      {/* ── FEATURED SKILLS ── */}
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 40px 96px" }}>
+        <AnimSection>
+          <div style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--accent)",
+            marginBottom: 16,
+          }}>
+            Featured skills
+          </div>
+          <h2 style={{
+            fontFamily: "var(--font-serif)",
+            fontSize: "clamp(30px, 4vw, 44px)",
+            fontWeight: 400,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            color: "var(--text)",
+            marginBottom: 14,
+          }}>
+            Most-used across all verticals
+          </h2>
+        </AnimSection>
+
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: 2,
+          marginTop: 48,
+        }}>
+          {FEATURED.map((f, i) => (
+            <AnimSection key={f.cmd} className={`anim-d${(i % 3) + 1}`}>
+              <Link
+                href={`/skills/${f.slug}/${f.skill}`}
+                style={{
+                  display: "block",
+                  background: "var(--s1)",
+                  border: "1px solid var(--b0)",
+                  borderRadius: 12,
+                  padding: 22,
+                  textDecoration: "none",
+                  height: "100%",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: "var(--sub)",
+                    background: "var(--s3)",
+                    padding: "3px 8px",
+                    borderRadius: 4,
+                    border: "1px solid var(--b0)",
+                  }}>
+                    {f.vertical}
                   </span>
-                  <h3 className="font-semibold text-text group-hover:text-primary transition-colors">
-                    {f.label}
-                  </h3>
-                  <p className="text-text-muted text-sm leading-relaxed flex-1">{f.example}</p>
-                  <div className="pt-2 border-t border-border">
-                    <code className="font-mono text-xs text-text-subtle">/{f.skill}</code>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    color: "var(--accent)",
+                    background: "var(--accent-dim)",
+                    padding: "3px 8px",
+                    borderRadius: 4,
+                  }}>
+                    {f.cmd}
+                  </span>
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 500, color: "var(--text)", marginBottom: 6 }}>{f.name}</div>
+                <div style={{ fontSize: 12, color: "var(--sub)", lineHeight: 1.55, fontWeight: 300 }}>{f.desc}</div>
+              </Link>
+            </AnimSection>
+          ))}
+        </div>
+      </div>
+
+      {/* ── VERTICALS ── */}
+      <div style={{
+        borderTop: "1px solid var(--b0)",
+        borderBottom: "1px solid var(--b0)",
+        background: "var(--s1)",
+      }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", padding: "96px 40px" }}>
+          <AnimSection>
+            <div style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              marginBottom: 16,
+            }}>
+              Skills by vertical
+            </div>
+            <h2 style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(30px, 4vw, 44px)",
+              fontWeight: 400,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
+              color: "var(--text)",
+              marginBottom: 14,
+            }}>
+              Install only what your team needs
+            </h2>
+            <p style={{ fontSize: 15, color: "var(--sub)", maxWidth: 480, lineHeight: 1.65, fontWeight: 300 }}>
+              Each vertical is an independent plugin. Mix and match across desks.
+            </p>
+          </AnimSection>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 2,
+            marginTop: 48,
+          }}>
+            {verticals.map((v, i) => (
+              <AnimSection key={v.slug} className={`anim-d${(i % 2) + 1}`}>
+                <Link
+                  href={`/skills/${v.slug}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 20,
+                    background: "var(--bg)",
+                    border: "1px solid var(--b0)",
+                    borderRadius: 12,
+                    padding: 28,
+                    textDecoration: "none",
+                    height: "100%",
+                  }}
+                >
+                  <div style={{
+                    width: 40,
+                    height: 40,
+                    background: "var(--accent-dim)",
+                    border: "1px solid var(--accent-mid)",
+                    borderRadius: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 16,
+                    flexShrink: 0,
+                    marginTop: 2,
+                  }}>
+                    {VERTICAL_ICONS[v.slug] ?? "📁"}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                      <span style={{ fontSize: 15, fontWeight: 500, color: "var(--text)" }}>{v.title}</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--sub)" }}>v{v.version}</span>
+                    </div>
+                    <div style={{ fontSize: 13, color: "var(--sub)", lineHeight: 1.6, fontWeight: 300, marginBottom: 12 }}>
+                      {v.tagline}
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {v.skills.slice(0, 2).map((s) => (
+                        <span
+                          key={s.slug}
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 11,
+                            color: "var(--accent)",
+                            background: "var(--accent-dim)",
+                            padding: "2px 7px",
+                            borderRadius: 4,
+                          }}
+                        >
+                          /{s.slug}
+                        </span>
+                      ))}
+                      <span style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        color: "var(--sub)",
+                        padding: "2px 7px",
+                      }}>
+                        +{v.skills.length - 2} more
+                      </span>
+                    </div>
                   </div>
                 </Link>
-              );
-            })}
+              </AnimSection>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Verticals grid */}
-      <section className="py-20 bg-surface-alt border-t border-b border-border">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-semibold text-text mb-2">Skills by vertical</h2>
-            <p className="text-text-muted max-w-lg mx-auto">
-              Each vertical is an independent plugin. Install only what your team needs.
+      {/* ── CTA ── */}
+      <div style={{
+        borderTop: "1px solid var(--b0)",
+        background: "var(--s1)",
+        padding: "96px 40px",
+        textAlign: "center",
+      }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <AnimSection>
+            <h2 style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "clamp(28px, 4vw, 44px)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              color: "var(--text)",
+              marginBottom: 14,
+            }}>
+              Ready to install your first skill?
+            </h2>
+            <p style={{ fontSize: 15, color: "var(--sub)", marginBottom: 36, fontWeight: 300 }}>
+              Start with Financial Analysis — the foundation vertical every other skill builds on.
             </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {verticals.map((v) => (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
               <Link
-                key={v.slug}
-                href={`/skills/${v.slug}`}
-                className="group bg-surface border border-border rounded-xl p-5 hover:border-primary hover:shadow-md transition-all"
+                href="/skills/financial-analysis"
+                style={{
+                  background: "var(--accent)",
+                  color: "#fff",
+                  padding: "11px 22px",
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  display: "inline-block",
+                }}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-semibold text-text group-hover:text-primary transition-colors">
-                    {v.title}
-                  </h3>
-                  <span className="text-xs text-text-subtle ml-2 shrink-0 mt-0.5 font-mono">v{v.version}</span>
-                </div>
-                <p className="text-text-muted text-sm leading-relaxed mb-4">{v.tagline}</p>
-                <div className="flex flex-wrap gap-1.5 items-center">
-                  {v.skills.slice(0, 2).map((s) => (
-                    <code key={s.slug} className="font-mono text-xs bg-surface-alt text-text-subtle px-1.5 py-0.5 rounded">
-                      /{s.slug}
-                    </code>
-                  ))}
-                  <span className="text-xs text-text-subtle">+{v.skills.length - 2} more</span>
-                </div>
+                Start with Financial Analysis
               </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why skills */}
-      <section className="py-20 bg-surface border-b border-border">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-semibold text-text mb-2">Why use skills instead of prompts?</h2>
-            <p className="text-text-muted max-w-xl mx-auto">
-              Skills encode domain knowledge, output format, and workflow logic that would take
-              hours to prompt-engineer from scratch.
+              <Link
+                href="/docs"
+                style={{
+                  background: "transparent",
+                  color: "var(--sub)",
+                  border: "1px solid var(--b1)",
+                  padding: "11px 22px",
+                  borderRadius: 8,
+                  fontSize: 14,
+                  textDecoration: "none",
+                  display: "inline-block",
+                }}
+              >
+                Read the install guide
+              </Link>
+            </div>
+            <p style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 12,
+              color: "var(--sub)",
+              marginTop: 20,
+            }}>
+              Requires Claude for Work (Teams or Enterprise) · Free · Apache-2.0
             </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-            {[
-              { title: "Domain-specific by default", desc: "Each skill knows the conventions of its workflow — IB pitch deck structure, earnings report format, KYC field taxonomy. You don't need to explain what a CIM is." },
-              { title: "Consistent output format",   desc: "Skills produce the same format every time. Your DCF always has a sensitivity table. Your morning note is always 400-600 words. Reviewable, repeatable, distributable." },
-              { title: "Works with your files",      desc: "Attach your Excel model, 10-K, earnings transcript, or data room. Skills know how to read what you give them and use it correctly." },
-              { title: "No prompt engineering",      desc: "Open Claude, type /dcf or /ic-memo, attach your files, and go. The skill handles the rest. No system prompt maintenance required." },
-            ].map((item) => (
-              <div key={item.title} className="p-5 rounded-xl border border-border bg-surface-alt flex flex-col gap-2">
-                <h3 className="font-semibold text-text">{item.title}</h3>
-                <p className="text-text-muted text-sm leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
+          </AnimSection>
         </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-24 bg-primary">
-        <div className="max-w-2xl mx-auto px-6 text-center flex flex-col items-center gap-6">
-          <h2 className="text-3xl font-bold text-white">Ready to install your first skill?</h2>
-          <p className="text-white/80 text-lg">
-            Start with Financial Analysis — the foundation vertical every other skill depends on.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/skills/financial-analysis"
-              className="bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-primary-light transition-colors text-sm"
-            >
-              Start with Financial Analysis
-            </Link>
-            <Link
-              href="/docs"
-              className="border border-white/30 text-white font-medium px-6 py-3 rounded-lg hover:bg-white/10 transition-colors text-sm"
-            >
-              Read the install guide
-            </Link>
-          </div>
-          <p className="text-white/50 text-xs">
-            Requires Claude for Work (Teams or Enterprise) · Free · Apache-2.0
-          </p>
-        </div>
-      </section>
+      </div>
     </>
   );
 }
