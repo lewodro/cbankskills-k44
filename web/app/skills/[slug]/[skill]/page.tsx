@@ -48,8 +48,8 @@ export default function SkillPage({ params }: Props) {
                 {v.title}
               </Link>
             </div>
-            <h1 className="text-4xl font-bold text-text mb-3">{s.name}</h1>
-            <p className="text-text-muted text-lg leading-relaxed max-w-2xl">{s.description}</p>
+            <h1 className="font-serif text-5xl font-normal text-text mb-3" style={{ letterSpacing: "-0.02em" }}>{s.name}</h1>
+            <p className="text-text-muted text-lg leading-relaxed max-w-2xl font-light">{s.description}</p>
           </div>
 
           {/* What it produces */}
@@ -197,20 +197,64 @@ export default function SkillPage({ params }: Props) {
         {/* Sidebar */}
         <aside className="flex flex-col gap-5">
           {/* Primary CTA */}
-          <div className="bg-primary rounded-xl p-5 flex flex-col gap-4 sticky top-20">
+          <div style={{
+            background: "var(--bg)",
+            border: "1px solid var(--accent-mid)",
+            borderRadius: 14,
+            padding: 20,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            position: "sticky",
+            top: 80,
+          }}>
             <div>
-              <div className="text-white/60 text-xs font-medium uppercase tracking-wide mb-1">
+              <div style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--accent)",
+                marginBottom: 10,
+              }}>
                 Get this skill
               </div>
-              <div className="text-white font-semibold">{s.name}</div>
-              <code className="text-white/60 font-mono text-xs">/{s.slug}</code>
+              <div style={{
+                fontFamily: "var(--font-serif)",
+                fontSize: 18,
+                fontWeight: 400,
+                color: "var(--text)",
+                marginBottom: 4,
+                lineHeight: 1.25,
+              }}>
+                {s.name}
+              </div>
+              <code style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--sub)",
+              }}>
+                /{s.slug}
+              </code>
             </div>
-            <div className="flex flex-col gap-2">
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <a
                 href={skillGithubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white text-primary font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-primary-light transition-colors text-center"
+                style={{
+                  background: "var(--accent)",
+                  color: "#fff",
+                  padding: "10px 16px",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  textAlign: "center",
+                  display: "block",
+                  fontFamily: "var(--font-sans)",
+                }}
               >
                 Download ZIP from GitHub
               </a>
@@ -218,14 +262,33 @@ export default function SkillPage({ params }: Props) {
                 href="https://claude.ai/customize/skills"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-white/30 text-white font-medium text-sm px-4 py-2.5 rounded-lg hover:bg-white/10 transition-colors text-center"
+                style={{
+                  background: "transparent",
+                  color: "var(--sub)",
+                  border: "1px solid var(--b1)",
+                  padding: "10px 16px",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  textAlign: "center",
+                  display: "block",
+                  fontFamily: "var(--font-sans)",
+                }}
               >
                 Upload to Claude →
               </a>
             </div>
+
             <Link
               href="/docs"
-              className="text-white/60 text-xs text-center hover:text-white transition-colors"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                color: "var(--sub)",
+                textAlign: "center",
+                textDecoration: "none",
+              }}
             >
               Need help? Read the install guide
             </Link>

@@ -8,8 +8,8 @@ export default function DocsPage() {
     <div className="max-w-4xl mx-auto px-6 py-16">
       {/* Header */}
       <div className="mb-12">
-        <h1 className="text-4xl font-bold text-text mb-3">Getting Started</h1>
-        <p className="text-text-muted text-xl max-w-2xl leading-relaxed">
+        <h1 className="font-serif text-5xl font-normal text-text mb-3" style={{ letterSpacing: "-0.02em" }}>Getting Started</h1>
+        <p className="text-text-muted text-xl max-w-2xl leading-relaxed font-light">
           How to download a skill and add it to Claude in under 5 minutes.
           No API keys. No code. No setup.
         </p>
@@ -40,7 +40,7 @@ export default function DocsPage() {
 
       {/* Step-by-step */}
       <section id="install" className="mb-16">
-        <h2 className="text-2xl font-semibold text-text mb-8">Install a skill — step by step</h2>
+        <h2 className="font-serif text-3xl font-normal text-text mb-8" style={{ letterSpacing: "-0.02em" }}>Install a skill — step by step</h2>
 
         <div className="flex flex-col gap-8">
           {/* Step 1 */}
@@ -181,7 +181,7 @@ export default function DocsPage() {
 
       {/* Install order */}
       <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-text mb-4">Recommended install order</h2>
+        <h2 className="font-serif text-3xl font-normal text-text mb-4" style={{ letterSpacing: "-0.02em" }}>Recommended install order</h2>
         <p className="text-text-muted text-sm mb-6">
           Most verticals depend on{" "}
           <Link href="/skills/financial-analysis" className="text-primary hover:underline">
@@ -218,7 +218,7 @@ export default function DocsPage() {
 
       {/* FAQ */}
       <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-text mb-8">FAQ</h2>
+        <h2 className="font-serif text-3xl font-normal text-text mb-8" style={{ letterSpacing: "-0.02em" }}>FAQ</h2>
         <div className="flex flex-col gap-6">
           {[
             {

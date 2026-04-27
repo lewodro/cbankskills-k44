@@ -11,8 +11,8 @@ export default function SkillsPage() {
       <div className="mb-12">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-3xl font-bold text-text mb-2">All Skills</h1>
-            <p className="text-text-muted text-lg max-w-2xl">
+            <h1 className="font-serif text-4xl font-normal text-text mb-2" style={{ letterSpacing: "-0.02em" }}>All Skills</h1>
+            <p className="text-text-muted text-lg max-w-2xl font-light">
               {totalSkills} production-ready skills across 7 financial services verticals.
               Each skill is a downloadable ZIP — upload to{" "}
               <a href="https://claude.ai/customize/skills" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
