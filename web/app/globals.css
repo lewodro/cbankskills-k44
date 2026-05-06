@@ -2,117 +2,117 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   CBANK — Design tokens (matches cbank_wormhole_1to1.html)
+   ============================================================ */
 :root {
-  --bg:            #FFFFFF;
-  --s1:            #F5F9F7;
-  --s2:            #EBF3EE;
-  --s3:            #DCEEe4;
-  --b0:            rgba(0,0,0,0.07);
-  --b1:            rgba(0,0,0,0.11);
-  --b2:            rgba(0,0,0,0.20);
-  --accent:        #2E8B57;
-  --accent-dim:    rgba(46,139,87,0.09);
-  --accent-mid:    rgba(46,139,87,0.22);
-  --text:          #0D1F14;
-  --sub:           #527A62;
-  --faint:         #B8D4C2;
+  --bg:         #FFFFFF;
+  --s1:         #F5F9F7;
+  --s2:         #EBF3EE;
+  --s3:         #DCEEe4;
 
-  /* bridge geist package variables → design token names */
-  --font-sans:  var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
-  --font-mono:  var(--font-geist-mono, ui-monospace, monospace);
-  /* --font-serif is set directly by Instrument_Serif.variable on <html> */
+  --b0:         rgba(0,0,0,0.07);
+  --b1:         rgba(0,0,0,0.11);
+  --b2:         rgba(0,0,0,0.20);
+
+  --accent:     #2E8B57;
+  --accent-dim: rgba(46,139,87,0.09);
+  --accent-mid: rgba(46,139,87,0.22);
+
+  --text:       #0D1F14;
+  --text-muted: #527A62;
+  --text-faint: #B8D4C2;
+  --text-fade:  rgba(13,31,20,0.32);
+
+  /* backward-compat aliases */
+  --sub:   #527A62;
+  --faint: #B8D4C2;
+
+  --grid-color: rgba(46,139,87,0.09);
+  --grid-size:  36px;
+
+  --font-sans:  var(--font-geist-sans, 'Geist', ui-sans-serif, system-ui, sans-serif);
+  --font-mono:  var(--font-geist-mono, 'Geist Mono', ui-monospace, monospace);
+  /* --font-serif set by Instrument_Serif.variable on <html> */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-family: var(--font-sans);
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── dot grid ── */
-.dot-grid::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(rgba(46,139,87,0.18) 1px, transparent 1px);
-  background-size: 26px 26px;
-  pointer-events: none;
-  z-index: 0;
+/* ── nav link hover ── */
+.nav-link-item { transition: color 0.15s, background 0.15s; }
+.nav-link-item:hover { color: var(--text) !important; background: var(--s1) !important; }
+
+/* ── outline button hover ── */
+.btn-outline { transition: background 0.15s, border-color 0.15s; }
+.btn-outline:hover { background: var(--s1) !important; border-color: var(--accent-mid) !important; }
+
+/* ── hero link-button gap animation ── */
+.hero-btn-link { transition: gap 0.15s; }
+.hero-btn-link:hover { gap: 12px !important; }
+
+/* ── skill card hover ── */
+.skill-card { transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+.skill-card:hover {
+  border-color: var(--accent-mid) !important;
+  background: var(--s2) !important;
+  transform: translateY(-2px) !important;
 }
 
-/* ── noise texture ── */
-.noise::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
+/* ── page transitions (View Transitions API — Chrome/Edge) ── */
+::view-transition-old(root) { animation: 180ms ease both vt-fade-out; }
+::view-transition-new(root) { animation: 320ms cubic-bezier(0.16,1,0.3,1) both vt-fade-up; }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-up  { from { opacity: 0; transform: translateY(12px); } }
 
-/* content sits above background textures */
-.rel { position: relative; z-index: 1; }
-
-/* ── page transition: View Transitions API (Chrome/Edge) ── */
-::view-transition-old(root) {
-  animation: 180ms ease both vt-fade-out;
-}
-::view-transition-new(root) {
-  animation: 320ms cubic-bezier(0.16, 1, 0.3, 1) both vt-fade-up;
-}
-@keyframes vt-fade-out {
-  to { opacity: 0; }
-}
-@keyframes vt-fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-}
-
-/* ── page transition: fallback for Firefox/Safari (via template.tsx) ── */
+/* ── page transition fallback (Firefox/Safari via template.tsx) ── */
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @supports not (view-transition-name: none) {
-  .page-enter { animation: pageIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .page-enter { animation: pageIn 0.38s cubic-bezier(0.16,1,0.3,1) forwards; }
 }
 
-/* ── scroll fade-up ── */
+/* ── scroll fade-up animations ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+.anim             { opacity: 0; }
+.anim.visible     { animation: fadeUp 0.55s ease forwards; }
+.anim-d1.visible  { animation-delay: 0.05s; }
+.anim-d2.visible  { animation-delay: 0.13s; }
+.anim-d3.visible  { animation-delay: 0.22s; }
+.anim-d4.visible  { animation-delay: 0.32s; }
+.anim-d5.visible  { animation-delay: 0.42s; }
 
-.anim              { opacity: 0; }
-.anim.visible      { animation: fadeUp 0.6s ease forwards; }
-.anim-d1.visible   { animation-delay: 0.05s; }
-.anim-d2.visible   { animation-delay: 0.15s; }
-.anim-d3.visible   { animation-delay: 0.25s; }
-.anim-d4.visible   { animation-delay: 0.35s; }
-.anim-d5.visible   { animation-delay: 0.45s; }
-.anim-d6.visible   { animation-delay: 0.55s; }
+/* ── marquee ── */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee-scroll 26s linear infinite; }
 
-/* ── blinking cursor ── */
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.t-cursor {
-  display: inline-block;
-  width: 6px;
-  height: 13px;
-  background: var(--accent);
-  vertical-align: text-bottom;
-  animation: blink 1s step-end infinite;
+/* ── responsive ── */
+@media (max-width: 768px) {
+  .hero-diamonds { display: none !important; }
+  .hero-h1 { font-size: 36px !important; }
+  .stats-bar { grid-template-columns: repeat(2,1fr) !important; }
+  .skills-grid { grid-template-columns: 1fr !important; }
 }
 
 @layer utilities {
-  .text-balance { text-wrap: balance; }
-  .font-serif   { font-family: var(--font-serif, ui-serif, serif); }
-  .font-sans    { font-family: var(--font-sans, ui-sans-serif, sans-serif); }
-  .font-mono    { font-family: var(--font-mono, ui-monospace, monospace); }
+  .font-serif { font-family: var(--font-serif, ui-serif, serif); }
+  .font-sans  { font-family: var(--font-sans, ui-sans-serif, sans-serif); }
+  .font-mono  { font-family: var(--font-mono, ui-monospace, monospace); }
 }

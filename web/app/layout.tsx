@@ -27,10 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         lang="en"
         className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}
       >
-        <body className="dot-grid noise">
-          <div className="rel flex flex-col min-h-screen">
+        <body>
+          <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main style={{ flex: 1 }}>{children}</main>
             <Footer />
           </div>
         </body>

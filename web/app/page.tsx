@@ -1,515 +1,398 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { verticals } from "@/content/verticals";
-import AnimSection from "@/components/AnimSection";
-import Terminal from "@/components/Terminal";
+import Marquee from "@/components/Marquee";
 
-const SKILLS_GITHUB = "https://github.com/spooky-may/project-jane-street/tree/main/skills";
-
-const totalSkills = verticals.reduce((acc, v) => acc + v.skills.length, 0);
-
-const FEATURED = [
-  { vertical: "IB",           slug: "investment-banking", skill: "cim-builder",   cmd: "/cim-builder",    name: "CIM Builder",    desc: "Draft a 60-page CIM from a data room in hours." },
-  { vertical: "Equity",       slug: "equity-research",    skill: "morning-note",   cmd: "/morning-note",   name: "Morning Note",   desc: "Post-earnings research note before the market opens." },
-  { vertical: "PE",           slug: "private-equity",     skill: "ic-memo",        cmd: "/ic-memo",        name: "IC Memo",        desc: "From DD findings to IC-ready memo in one command." },
-  { vertical: "Fin Analysis", slug: "financial-analysis", skill: "dcf-model",      cmd: "/dcf-model",      name: "DCF Model",      desc: "5-year DCF with WACC sensitivity from a 10-K." },
-  { vertical: "Fund Admin",   slug: "fund-admin",         skill: "nav-tieout",     cmd: "/nav-tieout",     name: "NAV Tie-Out",    desc: "Catch LP statement errors before they reach investors." },
-  { vertical: "Wealth",       slug: "wealth-management",  skill: "financial-plan", cmd: "/financial-plan", name: "Financial Plan", desc: "Full retirement plan from a client intake form." },
-];
-
-const VERTICAL_ICONS: Record<string, string> = {
-  "investment-banking": "🏦",
-  "equity-research":    "📊",
-  "private-equity":     "🔬",
-  "financial-analysis": "📈",
-  "fund-admin":         "⚖️",
-  "wealth-management":  "💼",
-  "operations":         "⚙️",
+export const metadata: Metadata = {
+  title: "CBANK — AI Infrastructure for Financial Services",
+  description:
+    "Production-ready Claude AI skills for investment banking, equity research, private equity, fund administration, and wealth management.",
 };
 
-const STATS = [
-  { num: totalSkills, label: "production-ready skills" },
-  { num: 7,           label: "financial verticals" },
-  { num: 10,          label: "end-to-end agents" },
-  { num: 0,           suffix: "  lines to install", label: "of code required" },
+const FEATURED_SKILLS = [
+  { vertical: "IB",           cmd: "/cim-builder",   name: "CIM Builder",      desc: "Draft a 60-page CIM from a data room in hours." },
+  { vertical: "Equity",       cmd: "/morning-note",  name: "Morning Note",     desc: "Post-earnings research note before the market opens." },
+  { vertical: "PE",           cmd: "/ic-memo",        name: "IC Memo",          desc: "From DD findings to IC-ready memo in one command." },
+  { vertical: "Fin Analysis", cmd: "/dcf-model",     name: "DCF Model",        desc: "5-year DCF with WACC sensitivity from a 10-K." },
+  { vertical: "Fund Admin",   cmd: "/nav-tieout",    name: "NAV Tie-Out",      desc: "Catch LP statement errors before they reach investors." },
+  { vertical: "Wealth",       cmd: "/fin-plan",      name: "Financial Plan",   desc: "Full retirement plan from a client intake form." },
 ];
+
+const ArrowSVG = () => (
+  <svg width="10" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M5.92007 0C6.00007 0 6.06674 0.0266667 6.12007 0.08L9.25341 3.34667C9.25341 3.34667 9.33341 3.48 9.33341 3.56V4.69333C9.33341 4.77333 9.30674 4.84 9.25341 4.90667L6.18674 8.09333C6.18674 8.09333 6.06674 8.17333 5.98674 8.17333H5.29341C5.04007 8.17333 4.92007 7.85333 5.09341 7.66667L7.98674 4.66667H0.320072C7.22607e-05 4.66667 -0.119928 4.24 0.146739 4.06667L0.880072 3.56C0.880072 3.56 1.00007 3.50667 1.05341 3.50667H7.90674L5.02674 0.506667C4.85341 0.32 4.97341 0 5.22674 0H5.92007Z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
 export default function HomePage() {
   return (
     <>
-      {/* ── HERO ── */}
-      <section style={{ maxWidth: 1000, margin: "0 auto", padding: "100px 40px 80px", textAlign: "center" }}>
-        <AnimSection className="anim-d1">
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            fontFamily: "var(--font-mono)",
-            fontSize: 11,
-            color: "var(--sub)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            border: "1px solid var(--b1)",
-            padding: "5px 14px",
-            borderRadius: 100,
-            marginBottom: 28,
-            background: "var(--s1)",
-          }}>
-            <span style={{ width: 5, height: 5, background: "var(--accent)", borderRadius: "50%", display: "inline-block" }} />
-            {totalSkills} production-ready skills · 7 verticals
-          </div>
-        </AnimSection>
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section
+        style={{
+          position: "relative",
+          minHeight: 480,
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
+          padding: "80px 48px",
+        }}
+      >
+        {/* Diamond crosshatch grid */}
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            backgroundColor: "#FFFFFF",
+            backgroundImage:
+              "linear-gradient(45deg, rgba(46,139,87,0.09) 1px, transparent 1px), " +
+              "linear-gradient(-45deg, rgba(46,139,87,0.09) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
+            pointerEvents: "none",
+          }}
+        />
+        {/* Radial fade — masks grid near left content */}
+        <div
+          style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            background:
+              "radial-gradient(ellipse 65% 80% at 28% 50%, " +
+              "rgba(255,255,255,0.97) 0%, " +
+              "rgba(255,255,255,0.85) 38%, " +
+              "rgba(255,255,255,0.25) 72%, " +
+              "transparent 100%)",
+          }}
+        />
 
-        <AnimSection className="anim-d2">
-          <h1 style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "clamp(44px, 7vw, 78px)",
-            fontWeight: 400,
-            lineHeight: 1.08,
-            letterSpacing: "-0.02em",
-            color: "var(--text)",
-            marginBottom: 20,
-          }}>
-            Claude skills built for<br />
-            <em style={{
-              fontStyle: "italic",
-              background: "linear-gradient(135deg, #1a5c38 0%, #2E8B57 55%, #52b57c 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}>
-              financial services
-            </em>
+        {/* Left: headline + sub + CTAs */}
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 560, flexShrink: 0 }}>
+          <h1
+            className="anim anim-d1 hero-h1"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(40px, 5.5vw, 64px)",
+              fontWeight: 800,
+              lineHeight: 1.04,
+              letterSpacing: "-0.04em",
+              marginBottom: 22,
+            }}
+          >
+            <span style={{ color: "var(--text)", display: "block" }}>AI infrastructure for</span>
+            <span style={{ color: "var(--text-fade)", display: "block" }}>financial services</span>
           </h1>
-        </AnimSection>
-
-        <AnimSection className="anim-d3">
-          <p style={{
-            fontSize: 17,
-            color: "var(--sub)",
-            maxWidth: 520,
-            margin: "0 auto 36px",
-            lineHeight: 1.65,
-            fontWeight: 300,
-          }}>
-            Production-ready skills for investment banking, equity research,
-            private equity, and wealth management. Download, upload, start in minutes.
+          <p
+            className="anim anim-d2"
+            style={{
+              fontSize: 16,
+              color: "rgba(13,31,20,0.50)",
+              maxWidth: 420,
+              lineHeight: 1.68,
+              fontWeight: 300,
+              marginBottom: 38,
+            }}
+          >
+            CBANK is the connective layer that brings Claude AI skills to every financial desk —
+            investment banking, equity research, private equity, and wealth management.
           </p>
-        </AnimSection>
-
-        <AnimSection className="anim-d4">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+          <div className="anim anim-d3" style={{ display: "flex", alignItems: "center", gap: 22 }}>
             <Link
               href="/skills"
               style={{
-                background: "var(--accent)",
+                background: "var(--text)",
                 color: "#fff",
-                padding: "11px 22px",
-                borderRadius: 8,
+                padding: "13px 26px",
+                borderRadius: 7,
                 fontSize: 14,
                 fontWeight: 600,
+                fontFamily: "var(--font-sans)",
                 textDecoration: "none",
                 display: "inline-block",
+                transition: "opacity 0.15s",
               }}
             >
-              Browse all skills →
+              Browse all skills
             </Link>
             <Link
               href="/docs"
+              className="hero-btn-link"
               style={{
-                background: "transparent",
-                color: "var(--sub)",
-                border: "1px solid var(--b1)",
-                padding: "11px 22px",
-                borderRadius: 8,
                 fontSize: 14,
+                fontWeight: 500,
+                color: "var(--text)",
+                fontFamily: "var(--font-sans)",
+                display: "flex",
+                alignItems: "center",
+                gap: 7,
                 textDecoration: "none",
-                display: "inline-block",
               }}
             >
-              How to install
+              Start building
+              <ArrowSVG />
             </Link>
           </div>
-        </AnimSection>
+        </div>
 
-        <AnimSection className="anim-d5">
-          <Terminal />
-        </AnimSection>
+        {/* Right: floating isometric diamonds */}
+        <div
+          className="anim anim-d4 hero-diamonds"
+          style={{
+            position: "absolute", right: 0, top: 0, bottom: 0,
+            width: "52%",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        >
+          <svg
+            width="100%" height="100%"
+            viewBox="0 0 520 480"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <filter id="ds1" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="rgba(46,139,87,0.18)" />
+              </filter>
+              <filter id="ds2" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="4" stdDeviation="7"  floodColor="rgba(46,139,87,0.14)" />
+              </filter>
+              <linearGradient id="gtop"  x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stopColor="#dceee4" />
+                <stop offset="100%" stopColor="#c0dccb" />
+              </linearGradient>
+              <linearGradient id="gleft" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stopColor="#a8d4be" />
+                <stop offset="100%" stopColor="#7bbf9e" />
+              </linearGradient>
+              <linearGradient id="grite" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stopColor="#c0dccb" />
+                <stop offset="100%" stopColor="#96c8ae" />
+              </linearGradient>
+            </defs>
+            {/* Diamond 1 — large, top right */}
+            <g filter="url(#ds1)" transform="translate(300,55)">
+              <polygon points="65,0  130,38  65,76  0,38"  fill="url(#gtop)"  opacity="0.88" />
+              <polygon points="0,38  65,76  65,120 0,82"   fill="url(#gleft)" opacity="0.88" />
+              <polygon points="65,76 130,38 130,82 65,120" fill="url(#grite)" opacity="0.88" />
+            </g>
+            {/* Diamond 2 — medium, mid-right */}
+            <g filter="url(#ds2)" transform="translate(360,220)">
+              <polygon points="46,0  92,27  46,54  0,27"  fill="url(#gtop)"  opacity="0.82" />
+              <polygon points="0,27  46,54  46,86  0,59"  fill="url(#gleft)" opacity="0.82" />
+              <polygon points="46,54 92,27 92,59 46,86"   fill="url(#grite)" opacity="0.82" />
+            </g>
+            {/* Diamond 3 — small, bottom mid */}
+            <g filter="url(#ds2)" transform="translate(210,320)">
+              <polygon points="36,0  72,21  36,42  0,21"  fill="url(#gtop)"  opacity="0.72" />
+              <polygon points="0,21  36,42  36,66  0,45"  fill="url(#gleft)" opacity="0.72" />
+              <polygon points="36,42 72,21 72,45 36,66"   fill="url(#grite)" opacity="0.72" />
+            </g>
+            {/* Diamond 4 — tiny, far right */}
+            <g filter="url(#ds2)" transform="translate(454,140)">
+              <polygon points="28,0  56,16  28,32  0,16"  fill="url(#gtop)"  opacity="0.65" />
+              <polygon points="0,16  28,32  28,52  0,36"  fill="url(#gleft)" opacity="0.65" />
+              <polygon points="28,32 56,16 56,36 28,52"   fill="url(#grite)" opacity="0.65" />
+            </g>
+            {/* Diamond 5 — ghost, left of cluster */}
+            <g filter="url(#ds2)" transform="translate(165,175)">
+              <polygon points="40,0  80,23  40,46  0,23"  fill="url(#gtop)"  opacity="0.45" />
+              <polygon points="0,23  40,46  40,72  0,49"  fill="url(#gleft)" opacity="0.45" />
+              <polygon points="40,46 80,23 80,49 40,72"   fill="url(#grite)" opacity="0.45" />
+            </g>
+          </svg>
+        </div>
       </section>
 
-      {/* ── STATS ── */}
-      <div style={{ borderTop: "1px solid var(--b0)", borderBottom: "1px solid var(--b0)", background: "var(--s1)" }}>
-        <div style={{
-          maxWidth: 900,
-          margin: "0 auto",
+      {/* ── MARQUEE ──────────────────────────────────────────── */}
+      <Marquee />
+
+      {/* ── STATS BAR ────────────────────────────────────────── */}
+      <div
+        className="stats-bar"
+        style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
-        }}>
-          {STATS.map((s, i) => (
+          borderBottom: "1px solid var(--b0)",
+          background: "var(--bg)",
+        }}
+      >
+        {[
+          { num: "55",                                           label: "Production skills" },
+          { num: "7",                                            label: "Financial verticals" },
+          { num: "10",                                           label: "End-to-end agents" },
+          { num: <>0<span style={{ color: "var(--accent)" }}>loc</span></>, label: "To install" },
+        ].map((s, i) => (
+          <div
+            key={i}
+            className={`anim${i > 0 ? ` anim-d${i}` : ""}`}
+            style={{
+              padding: "30px 24px",
+              textAlign: "center",
+              borderRight: i < 3 ? "1px solid var(--b0)" : undefined,
+            }}
+          >
             <div
-              key={i}
               style={{
-                padding: "36px 32px",
-                borderRight: i < STATS.length - 1 ? "1px solid var(--b0)" : undefined,
-                textAlign: "center",
-              }}
-            >
-              <div style={{
                 fontFamily: "var(--font-serif)",
-                fontSize: 46,
+                fontSize: 40,
                 fontWeight: 400,
                 lineHeight: 1,
                 color: "var(--text)",
                 marginBottom: 6,
-              }}>
-                {s.num}
-                {s.suffix && <span style={{ color: "var(--accent)", fontSize: 18 }}>{s.suffix}</span>}
-              </div>
-              <div style={{ fontSize: 12, color: "var(--sub)", letterSpacing: "0.03em" }}>
-                {s.label}
-              </div>
+              }}
+            >
+              {s.num}
             </div>
-          ))}
-        </div>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 9,
+                color: "var(--text-faint)",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+              }}
+            >
+              {s.label}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ── HOW IT WORKS ── */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "96px 40px" }}>
-        <AnimSection>
-          <div style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 11,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--accent)",
-            marginBottom: 16,
-          }}>
-            How it works
-          </div>
-          <h2 style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "clamp(30px, 4vw, 44px)",
-            fontWeight: 400,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-            color: "var(--text)",
-            marginBottom: 14,
-          }}>
-            Three steps. No setup.
-          </h2>
-          <p style={{ fontSize: 15, color: "var(--sub)", maxWidth: 480, lineHeight: 1.65, fontWeight: 300 }}>
-            No API keys. No build step. No dependencies.
-          </p>
-        </AnimSection>
+      {/* ── SKILLS SECTION ───────────────────────────────────── */}
+      <div style={{ padding: "56px 48px", background: "var(--bg)" }}>
+        <div className="anim" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent)", marginBottom: 12 }}>
+          Featured skills
+        </div>
+        <h2 className="anim anim-d1" style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.1, color: "var(--text)", marginBottom: 10 }}>
+          The full workflow,{" "}
+          <span style={{ color: "var(--text-fade)" }}>one command at a time</span>
+        </h2>
+        <p className="anim anim-d2" style={{ fontSize: 13, color: "rgba(13,31,20,0.45)", maxWidth: 420, lineHeight: 1.65, fontWeight: 300, marginBottom: 32 }}>
+          Purpose-built for each desk. Download one skill or an entire vertical from GitHub.
+        </p>
 
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 20,
-          marginTop: 56,
-        }}>
-          {[
-            { n: "01", title: "Find your skill", desc: "Browse " + totalSkills + " skills across 7 financial services verticals. Each skill is purpose-built for a specific workflow.", href: "/skills", cta: "Browse skills →" },
-            { n: "02", title: "Download the ZIP", desc: "Each skill is a self-contained ZIP file. Download one skill or an entire vertical from GitHub.", href: SKILLS_GITHUB, cta: "View on GitHub →", external: true },
-            { n: "03", title: "Upload to Claude", desc: "Go to claude.ai/customize/skills, upload your ZIP. The skill becomes a slash command instantly.", href: "https://claude.ai/customize/skills", cta: "Open Claude Skills →", external: true },
-          ].map((step, i) => (
-            <AnimSection key={step.n} className={`anim-d${i + 1}`}>
-              <div style={{
+        <div
+          className="skills-grid"
+          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}
+        >
+          {FEATURED_SKILLS.map((s, i) => (
+            <Link
+              key={s.cmd}
+              href={`/skills/${s.name.toLowerCase().replace(/\s+/g, "-")}`}
+              className={`skill-card anim anim-d${(i % 3) + 1}`}
+              style={{
                 background: "var(--s1)",
-                padding: "32px 28px",
                 border: "1px solid var(--b0)",
                 borderRadius: 12,
-                height: "100%",
-              }}>
-                <div style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: 72,
-                  fontWeight: 400,
-                  color: "var(--faint)",
-                  lineHeight: 1,
-                  marginBottom: 20,
-                  letterSpacing: "-0.03em",
-                }}>
-                  {step.n}
-                </div>
-                <div style={{ fontSize: 15, fontWeight: 500, color: "var(--text)", marginBottom: 8 }}>
-                  {step.title}
-                </div>
-                <div style={{ fontSize: 13, color: "var(--sub)", lineHeight: 1.65, fontWeight: 300, marginBottom: 16 }}>
-                  {step.desc}
-                </div>
-                {step.external ? (
-                  <a href={step.href} target="_blank" rel="noopener noreferrer"
-                    style={{ color: "var(--accent)", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
-                    {step.cta}
-                  </a>
-                ) : (
-                  <Link href={step.href}
-                    style={{ color: "var(--accent)", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
-                    {step.cta}
-                  </Link>
-                )}
-              </div>
-            </AnimSection>
-          ))}
-        </div>
-      </div>
-
-      {/* ── FEATURED SKILLS ── */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 40px 96px" }}>
-        <AnimSection>
-          <div style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 11,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: "var(--accent)",
-            marginBottom: 16,
-          }}>
-            Featured skills
-          </div>
-          <h2 style={{
-            fontFamily: "var(--font-serif)",
-            fontSize: "clamp(30px, 4vw, 44px)",
-            fontWeight: 400,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.1,
-            color: "var(--text)",
-            marginBottom: 14,
-          }}>
-            Most-used across all verticals
-          </h2>
-        </AnimSection>
-
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 20,
-          marginTop: 48,
-        }}>
-          {FEATURED.map((f, i) => (
-            <AnimSection key={f.cmd} className={`anim-d${(i % 3) + 1}`}>
-              <Link
-                href={`/skills/${f.slug}/${f.skill}`}
-                style={{
-                  display: "block",
-                  background: "var(--s1)",
-                  border: "1px solid var(--b0)",
-                  borderRadius: 12,
-                  padding: 22,
-                  textDecoration: "none",
-                  height: "100%",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 14 }}>
-                  <span style={{
+                padding: 22,
+                cursor: "pointer",
+                textDecoration: "none",
+                display: "block",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 13 }}>
+                <span
+                  style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: 10,
+                    fontSize: 9,
                     textTransform: "uppercase",
                     letterSpacing: "0.08em",
-                    color: "var(--sub)",
+                    color: "var(--text-muted)",
                     background: "var(--s3)",
                     padding: "3px 8px",
                     borderRadius: 4,
-                    border: "1px solid var(--b0)",
-                  }}>
-                    {f.vertical}
-                  </span>
-                  <span style={{
+                  }}
+                >
+                  {s.vertical}
+                </span>
+                <span
+                  style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: 11,
+                    fontSize: 10,
                     color: "var(--accent)",
                     background: "var(--accent-dim)",
                     padding: "3px 8px",
                     borderRadius: 4,
-                  }}>
-                    {f.cmd}
-                  </span>
-                </div>
-                <div style={{ fontSize: 14, fontWeight: 500, color: "var(--text)", marginBottom: 6 }}>{f.name}</div>
-                <div style={{ fontSize: 12, color: "var(--sub)", lineHeight: 1.55, fontWeight: 300 }}>{f.desc}</div>
-              </Link>
-            </AnimSection>
+                  }}
+                >
+                  {s.cmd}
+                </span>
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 5 }}>
+                {s.name}
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(13,31,20,0.45)", lineHeight: 1.55, fontWeight: 300 }}>
+                {s.desc}
+              </div>
+            </Link>
           ))}
         </div>
       </div>
 
-      {/* ── VERTICALS ── */}
-      <div style={{
-        borderTop: "1px solid var(--b0)",
-        borderBottom: "1px solid var(--b0)",
-        background: "var(--s1)",
-      }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", padding: "96px 40px" }}>
-          <AnimSection>
-            <div style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--accent)",
-              marginBottom: 16,
-            }}>
-              Skills by vertical
-            </div>
-            <h2 style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(30px, 4vw, 44px)",
-              fontWeight: 400,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
+      {/* ── CTA SECTION ──────────────────────────────────────── */}
+      <div
+        style={{
+          background: "var(--s1)",
+          borderTop: "1px solid var(--b0)",
+          padding: "56px 48px",
+          textAlign: "center",
+        }}
+      >
+        <h2
+          className="anim"
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(26px, 3.5vw, 36px)",
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            color: "var(--text)",
+            marginBottom: 10,
+          }}
+        >
+          Ready to install your first skill?{" "}
+          <span style={{ color: "var(--text-fade)" }}>Start in minutes.</span>
+        </h2>
+        <p className="anim anim-d1" style={{ fontSize: 14, color: "rgba(13,31,20,0.45)", marginBottom: 28, fontWeight: 300 }}>
+          Start with Financial Analysis — the foundation every other skill builds on.
+        </p>
+        <div className="anim anim-d2" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14 }}>
+          <Link
+            href="/skills/financial-analysis"
+            style={{
+              background: "var(--text)",
+              color: "#fff",
+              padding: "13px 26px",
+              borderRadius: 7,
+              fontSize: 14,
+              fontWeight: 600,
+              fontFamily: "var(--font-sans)",
+              textDecoration: "none",
+              display: "inline-block",
+            }}
+          >
+            Start with Financial Analysis
+          </Link>
+          <Link
+            href="/docs"
+            className="hero-btn-link"
+            style={{
+              fontSize: 14,
+              fontWeight: 500,
               color: "var(--text)",
-              marginBottom: 14,
-            }}>
-              Install only what your team needs
-            </h2>
-            <p style={{ fontSize: 15, color: "var(--sub)", maxWidth: 480, lineHeight: 1.65, fontWeight: 300 }}>
-              Each vertical is an independent plugin. Mix and match across desks.
-            </p>
-          </AnimSection>
-
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 20,
-            marginTop: 48,
-          }}>
-            {verticals.map((v, i) => (
-              <AnimSection key={v.slug} className={`anim-d${(i % 2) + 1}`}>
-                <Link
-                  href={`/skills/${v.slug}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 20,
-                    background: "var(--bg)",
-                    border: "1px solid var(--b0)",
-                    borderRadius: 12,
-                    padding: 28,
-                    textDecoration: "none",
-                    height: "100%",
-                  }}
-                >
-                  <div style={{
-                    width: 40,
-                    height: 40,
-                    background: "var(--accent-dim)",
-                    border: "1px solid var(--accent-mid)",
-                    borderRadius: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 16,
-                    flexShrink: 0,
-                    marginTop: 2,
-                  }}>
-                    {VERTICAL_ICONS[v.slug] ?? "📁"}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                      <span style={{ fontSize: 15, fontWeight: 500, color: "var(--text)" }}>{v.title}</span>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--sub)" }}>v{v.version}</span>
-                    </div>
-                    <div style={{ fontSize: 13, color: "var(--sub)", lineHeight: 1.6, fontWeight: 300, marginBottom: 12 }}>
-                      {v.tagline}
-                    </div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      {v.skills.slice(0, 2).map((s) => (
-                        <span
-                          key={s.slug}
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 11,
-                            color: "var(--accent)",
-                            background: "var(--accent-dim)",
-                            padding: "2px 7px",
-                            borderRadius: 4,
-                          }}
-                        >
-                          /{s.slug}
-                        </span>
-                      ))}
-                      <span style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 11,
-                        color: "var(--sub)",
-                        padding: "2px 7px",
-                      }}>
-                        +{v.skills.length - 2} more
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </AnimSection>
-            ))}
-          </div>
+              display: "flex",
+              alignItems: "center",
+              gap: 7,
+              textDecoration: "none",
+            }}
+          >
+            Read the install guide
+            <ArrowSVG />
+          </Link>
         </div>
-      </div>
-
-      {/* ── CTA ── */}
-      <div style={{
-        borderTop: "1px solid var(--b0)",
-        background: "var(--s1)",
-        padding: "96px 40px",
-        textAlign: "center",
-      }}>
-        <div style={{ maxWidth: 600, margin: "0 auto" }}>
-          <AnimSection>
-            <h2 style={{
-              fontFamily: "var(--font-serif)",
-              fontSize: "clamp(28px, 4vw, 44px)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-              color: "var(--text)",
-              marginBottom: 14,
-            }}>
-              Ready to install your first skill?
-            </h2>
-            <p style={{ fontSize: 15, color: "var(--sub)", marginBottom: 36, fontWeight: 300 }}>
-              Start with Financial Analysis — the foundation vertical every other skill builds on.
-            </p>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-              <Link
-                href="/skills/financial-analysis"
-                style={{
-                  background: "var(--accent)",
-                  color: "#fff",
-                  padding: "11px 22px",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  display: "inline-block",
-                }}
-              >
-                Start with Financial Analysis
-              </Link>
-              <Link
-                href="/docs"
-                style={{
-                  background: "transparent",
-                  color: "var(--sub)",
-                  border: "1px solid var(--b1)",
-                  padding: "11px 22px",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  textDecoration: "none",
-                  display: "inline-block",
-                }}
-              >
-                Read the install guide
-              </Link>
-            </div>
-            <p style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
-              color: "var(--sub)",
-              marginTop: 20,
-            }}>
-              Requires Claude for Work (Teams or Enterprise) · Free · Apache-2.0
-            </p>
-          </AnimSection>
-        </div>
+        <p className="anim anim-d3" style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-faint)", marginTop: 16, letterSpacing: "0.04em" }}>
+          Requires Claude for Work (Teams or Enterprise) · Free · Apache-2.0
+        </p>
       </div>
     </>
   );
