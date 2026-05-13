@@ -118,6 +118,11 @@ body {
   .hero-h1 { font-size: 36px !important; }
   .stats-bar { grid-template-columns: repeat(2,1fr) !important; }
   .skills-grid { grid-template-columns: 1fr !important; }
+  .split-section { grid-template-columns: 1fr !important; }
+  .split-section > *:first-child { border-right: none !important; border-bottom: 1px solid var(--b0); }
+  .pillars-grid { grid-template-columns: repeat(2,1fr) !important; }
+  .pillars-grid > *:nth-child(odd) { border-right: 1px solid var(--b0); }
+  .pillars-grid > *:nth-child(n+3) { border-top: 1px solid var(--b0); }
 }
 
 @layer utilities {

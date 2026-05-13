@@ -423,7 +423,7 @@ export default function HomePage() {
           The foundation for{" "}
           <span style={{ color: "var(--text-fade)" }}>financial AI.</span>
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
+        <div className="pillars-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
           {PILLARS.map((p, i) => (
             <div
               key={p.label}
