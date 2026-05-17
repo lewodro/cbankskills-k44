@@ -39,6 +39,7 @@ export default function HomePage() {
     <>
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section
+        className="hero-bg"
         style={{
           position: "relative",
           minHeight: "calc(100vh - 60px)",
@@ -46,7 +47,6 @@ export default function HomePage() {
           alignItems: "center",
           overflow: "hidden",
           padding: "80px 48px",
-          background: "#fff",
         }}
       >
         {/* Radial fade */}
