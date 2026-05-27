@@ -74,6 +74,56 @@ function inlineRender(text: string): React.ReactNode[] {
   })
 }
 
+function MdTable({ lines }: { lines: string[] }) {
+  const isSep = (l: string) => /^\|[\s\-:|]+\|/.test(l.trim())
+  const parseRow = (l: string) =>
+    l.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim())
+
+  const headers = parseRow(lines[0])
+  const body = lines.slice(1).filter(l => !isSep(l)).map(parseRow)
+
+  return (
+    <div style={{ overflowX: 'auto', margin: '8px 0' }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 12, lineHeight: 1.5 }}>
+        <thead>
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i} style={{
+                padding: '5px 10px',
+                background: 'rgba(46,139,87,0.09)',
+                borderBottom: '1px solid var(--b0)',
+                fontWeight: 600,
+                fontSize: 11,
+                textAlign: 'left',
+                whiteSpace: 'nowrap',
+                color: 'var(--text)',
+              }}>
+                {inlineRender(h)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {body.map((row, ri) => (
+            <tr key={ri} style={{ borderBottom: '1px solid var(--b0)' }}>
+              {row.map((cell, ci) => (
+                <td key={ci} style={{
+                  padding: '5px 10px',
+                  color: ci === 0 ? 'var(--text)' : 'var(--text-muted)',
+                  fontWeight: ci === 0 ? 500 : 300,
+                  verticalAlign: 'top',
+                }}>
+                  {inlineRender(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function MdMsg({ text }: { text: string }) {
   if (!text) return null
 
@@ -105,6 +155,11 @@ function MdMsg({ text }: { text: string }) {
         return block.split(/\n\n+/).map((para, pi) => {
           if (!para.trim()) return null
           const lines = para.split('\n').filter(l => l.trim())
+
+          // Table: all lines start with |
+          if (lines.length >= 2 && lines.every(l => l.trim().startsWith('|'))) {
+            return <MdTable key={`${bi}-${pi}`} lines={lines} />
+          }
 
           const isUl = lines.length > 0 && lines.every(l => /^[-*] /.test(l))
           const isOl = lines.length > 0 && lines.every(l => /^\d+\. /.test(l))
@@ -159,8 +214,15 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
   useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 440)
-    else { setMsgs([]); setInput('') }
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 440)
+      document.body.style.overflow = 'hidden'
+    } else {
+      setMsgs([])
+      setInput('')
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
   }, [open])
 
   useEffect(() => {
@@ -245,7 +307,7 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain', padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {msgs.length === 0 ? (
             <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 300, lineHeight: 1.65 }}>
               Ask anything about <strong style={{ fontWeight: 600, color: 'var(--text)' }}>{context}</strong>. Try a suggested question below:
