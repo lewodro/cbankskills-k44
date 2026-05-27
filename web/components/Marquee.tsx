@@ -39,7 +39,7 @@ export default function Marquee() {
               display: "flex", alignItems: "center",
               padding: "0 26px",
               fontSize: 11, fontWeight: 500,
-              color: "var(--text-faint)",
+              color: "var(--text-muted)",
               letterSpacing: "0.05em",
               textTransform: "uppercase",
               whiteSpace: "nowrap",

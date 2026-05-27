@@ -41,12 +41,12 @@ export default function SkillPage({ params }: Props) {
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
         <nav style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", marginBottom: 36, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          <Link href="/" style={{ color: "var(--text-faint)", textDecoration: "none" }}>Home</Link>
-          <span style={{ color: "var(--text-faint)" }}>/</span>
-          <Link href="/skills" style={{ color: "var(--text-faint)", textDecoration: "none" }}>Skills</Link>
-          <span style={{ color: "var(--text-faint)" }}>/</span>
-          <Link href={`/skills/${v.slug}`} style={{ color: "var(--text-faint)", textDecoration: "none" }}>{v.title}</Link>
-          <span style={{ color: "var(--text-faint)" }}>/</span>
+          <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</Link>
+          <span style={{ color: "var(--text-muted)" }}>/</span>
+          <Link href="/skills" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Skills</Link>
+          <span style={{ color: "var(--text-muted)" }}>/</span>
+          <Link href={`/skills/${v.slug}`} style={{ color: "var(--text-muted)", textDecoration: "none" }}>{v.title}</Link>
+          <span style={{ color: "var(--text-muted)" }}>/</span>
           <span style={{ color: "var(--text-muted)" }}>{s.name}</span>
         </nav>
 
@@ -103,7 +103,7 @@ export default function SkillPage({ params }: Props) {
               <h2 style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", marginBottom: 6, letterSpacing: "-0.04em" }}>
                 Use it like this
               </h2>
-              <p style={{ fontSize: 12, color: "rgba(13,31,20,0.45)", marginBottom: 16, fontWeight: 300 }}>
+              <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 16, fontWeight: 300 }}>
                 After uploading this skill to Claude, type in the chat:
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -196,7 +196,7 @@ export default function SkillPage({ params }: Props) {
                     </div>
                     <div>
                       <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 5, letterSpacing: "-0.02em" }}>{step.title}</div>
-                      <p style={{ fontSize: 12, color: "rgba(13,31,20,0.50)", lineHeight: 1.75, fontWeight: 300 }}>{step.desc}</p>
+                      <p style={{ fontSize: 12, color: "var(--text-muted)", lineHeight: 1.75, fontWeight: 300 }}>{step.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -210,7 +210,7 @@ export default function SkillPage({ params }: Props) {
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent)", marginBottom: 8 }}>
                 ◆ Related
               </div>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 14 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 14 }}>
                 More skills in {v.title}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -344,7 +344,7 @@ export default function SkillPage({ params }: Props) {
 
             {/* Part of vertical */}
             <div style={{ background: "var(--s1)", border: "1px solid var(--b0)", borderRadius: 12, padding: "16px 18px" }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 10 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 10 }}>
                 Part of vertical
               </div>
               <Link
@@ -356,7 +356,7 @@ export default function SkillPage({ params }: Props) {
                   <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>
                     {v.title}
                   </div>
-                  <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
                     {v.skills.length} skills · v{v.version}
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function SkillPage({ params }: Props) {
                   href={verticalGithubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-faint)", textDecoration: "none" }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-muted)", textDecoration: "none" }}
                 >
                   Download full vertical →
                 </a>
@@ -377,10 +377,10 @@ export default function SkillPage({ params }: Props) {
             {/* Dependency */}
             {v.slug !== "financial-analysis" && (
               <div style={{ background: "var(--s1)", border: "1px solid var(--b0)", borderRadius: 10, padding: "14px 16px" }}>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 8 }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 8 }}>
                   Dependency
                 </div>
-                <p style={{ fontSize: 11, color: "rgba(13,31,20,0.50)", lineHeight: 1.65, fontWeight: 300 }}>
+                <p style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.65, fontWeight: 300 }}>
                   Install{" "}
                   <Link href="/skills/financial-analysis" style={{ color: "var(--accent)", textDecoration: "none" }}>
                     Financial Analysis

@@ -439,7 +439,7 @@ export default function HomePage() {
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", background: "var(--s3)", padding: "3px 8px", borderRadius: 4 }}>
                   {v.skills.length} skills
                 </span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-faint)", letterSpacing: "0.04em" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.04em" }}>
                   v{v.version}
                 </span>
               </div>

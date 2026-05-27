@@ -30,7 +30,7 @@ export default function DocsPage() {
 
           {/* Sidebar */}
           <aside style={{ position: "sticky", top: 80, height: "fit-content", display: "flex", flexDirection: "column", gap: 2 }}>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 10, paddingLeft: 10 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 10, paddingLeft: 10 }}>
               On this page
             </div>
             {NAV_ITEMS.map((item) => (
@@ -53,7 +53,7 @@ export default function DocsPage() {
             ))}
 
             <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--b0)" }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 10, paddingLeft: 10 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 10, paddingLeft: 10 }}>
                 Resources
               </div>
               <a
@@ -155,7 +155,7 @@ export default function DocsPage() {
                             className="flex items-center justify-between text-sm text-text-muted hover:text-primary transition-colors group p-1"
                           >
                             <span>{v.title}</span>
-                            <span className="text-xs text-text-subtle group-hover:text-primary">{v.skills.length} skills</span>
+                            <span className="text-xs text-text-muted group-hover:text-primary">{v.skills.length} skills</span>
                           </Link>
                         ))}
                       </div>
@@ -248,14 +248,14 @@ export default function DocsPage() {
                     </p>
                     <div className="rounded-xl p-4" style={{ background: "#0D1F14", border: "1px solid rgba(46,139,87,0.18)" }}>
                       <div className="font-mono text-sm space-y-1.5">
-                        <p className="text-white/40"># Example — using the DCF skill</p>
+                        <p className="text-white/50"># Example — using the DCF skill</p>
                         <p>
                           <span className="text-primary">›</span>{" "}
                           <span className="text-white">/dcf Build 5-year DCF for Apple — attached 10-K + analyst model</span>
                         </p>
-                        <p className="text-white/50">  Reading 10-K... Projecting free cash flows 2025-2029...</p>
-                        <p className="text-white/50">  Calculating WACC... Building sensitivity tables...</p>
-                        <p className="text-green-400/80">  ✓ DCF model ready. Base case: $198/share. Download Excel.</p>
+                        <p className="text-white/60">  Reading 10-K... Projecting free cash flows 2025-2029...</p>
+                        <p className="text-white/60">  Calculating WACC... Building sensitivity tables...</p>
+                        <p className="text-green-400">  ✓ DCF model ready. Base case: $198/share. Download Excel.</p>
                       </div>
                     </div>
                   </div>
@@ -289,14 +289,14 @@ export default function DocsPage() {
                   const v = verticals.find((v) => v.slug === item.slug)!;
                   return (
                     <div key={item.slug} className="flex items-center gap-4 bg-surface border border-border rounded-lg px-4 py-3">
-                      <span className="text-xs font-mono text-text-subtle w-10 shrink-0">{item.order}</span>
+                      <span className="text-xs font-mono text-text-muted w-10 shrink-0">{item.order}</span>
                       <Link
                         href={`/skills/${item.slug}`}
                         className="font-medium text-text hover:text-primary transition-colors text-sm shrink-0"
                       >
                         {v.title}
                       </Link>
-                      <span className="text-text-subtle text-sm hidden sm:block">{item.note}</span>
+                      <span className="text-text-muted text-sm hidden sm:block">{item.note}</span>
                     </div>
                   );
                 })}
