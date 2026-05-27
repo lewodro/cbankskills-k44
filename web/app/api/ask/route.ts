@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       'X-Title': 'CN Finance',
     },
     body: JSON.stringify({
-      model: 'deepseek/deepseek-v4-flash',
+      model: 'mistralai/ministral-3b-2512',
       stream: true,
       messages: [
         {

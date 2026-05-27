@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const SUGGESTED: Record<string, string[]> = {
   'financial-analysis': [
@@ -54,8 +55,99 @@ interface Props {
   compact?: boolean
 }
 
+/* ── Markdown renderer ─────────────────────────────────────── */
+
+function inlineRender(text: string): React.ReactNode[] {
+  const parts = text.split(/(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g)
+  return parts.map((p, i) => {
+    if (p.startsWith('`') && p.endsWith('`') && p.length > 2)
+      return (
+        <code key={i} style={{ fontFamily: 'var(--font-mono)', background: 'rgba(46,139,87,0.12)', padding: '1px 5px', borderRadius: 3, fontSize: '0.88em' }}>
+          {p.slice(1, -1)}
+        </code>
+      )
+    if (p.startsWith('**') && p.endsWith('**') && p.length > 4)
+      return <strong key={i} style={{ fontWeight: 600 }}>{p.slice(2, -2)}</strong>
+    if (p.startsWith('*') && p.endsWith('*') && p.length > 2)
+      return <em key={i}>{p.slice(1, -1)}</em>
+    return p
+  })
+}
+
+function MdMsg({ text }: { text: string }) {
+  if (!text) return null
+
+  const blocks = text.split(/(```[\s\S]*?```)/g)
+
+  return (
+    <>
+      {blocks.flatMap((block, bi) => {
+        if (block.startsWith('```')) {
+          const code = block.replace(/^```\w*\n?/, '').replace(/\n?```$/, '')
+          return [
+            <pre key={`cb-${bi}`} style={{
+              background: 'rgba(13,31,20,0.06)',
+              border: '1px solid var(--b0)',
+              borderRadius: 6,
+              padding: '10px 12px',
+              fontSize: 11,
+              fontFamily: 'var(--font-mono)',
+              overflowX: 'auto',
+              margin: '6px 0',
+              whiteSpace: 'pre',
+              lineHeight: 1.5,
+            }}>
+              <code>{code}</code>
+            </pre>,
+          ]
+        }
+
+        return block.split(/\n\n+/).map((para, pi) => {
+          if (!para.trim()) return null
+          const lines = para.split('\n').filter(l => l.trim())
+
+          const isUl = lines.length > 0 && lines.every(l => /^[-*] /.test(l))
+          const isOl = lines.length > 0 && lines.every(l => /^\d+\. /.test(l))
+
+          if (isUl) return (
+            <ul key={`${bi}-${pi}`} style={{ paddingLeft: 18, margin: '4px 0 8px', listStyleType: 'disc' }}>
+              {lines.map((l, li) => (
+                <li key={li} style={{ marginBottom: 3, lineHeight: 1.6 }}>
+                  {inlineRender(l.replace(/^[-*] /, ''))}
+                </li>
+              ))}
+            </ul>
+          )
+
+          if (isOl) return (
+            <ol key={`${bi}-${pi}`} style={{ paddingLeft: 18, margin: '4px 0 8px', listStyleType: 'decimal' }}>
+              {lines.map((l, li) => (
+                <li key={li} style={{ marginBottom: 3, lineHeight: 1.6 }}>
+                  {inlineRender(l.replace(/^\d+\. /, ''))}
+                </li>
+              ))}
+            </ol>
+          )
+
+          return (
+            <p key={`${bi}-${pi}`} style={{ margin: '0 0 6px', lineHeight: 1.65 }}>
+              {para.split('\n').map((line, li, arr) => [
+                inlineRender(line),
+                li < arr.length - 1 ? <br key={`br-${li}`} /> : null,
+              ])}
+            </p>
+          )
+        }).filter(Boolean)
+      })}
+    </>
+  )
+}
+
+/* ── Component ────────────────────────────────────────────── */
+
 export default function AskClaude({ vertical, context, compact = false }: Props) {
   const [open, setOpen]       = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [input, setInput]     = useState('')
   const [msgs, setMsgs]       = useState<Msg[]>([])
   const [loading, setLoading] = useState(false)
@@ -63,6 +155,8 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
   const inputRef  = useRef<HTMLInputElement>(null)
 
   const questions = SUGGESTED[vertical] ?? FALLBACK
+
+  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 440)
@@ -130,6 +224,101 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
     setLoading(false)
   }
 
+  const modal = (
+    <div className="ac-backdrop" onClick={() => setOpen(false)}>
+      <div className="ac-panel" onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--b0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img
+              src="/chat-mascot.jpeg"
+              alt="Claude"
+              style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--accent-mid)' }}
+            />
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em', lineHeight: 1 }}>Claude</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.06em', marginTop: 3 }}>{context}</div>
+            </div>
+          </div>
+          <button className="ac-close-btn" onClick={() => setOpen(false)}>×</button>
+        </div>
+
+        {/* Body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {msgs.length === 0 ? (
+            <>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 300, lineHeight: 1.65 }}>
+                Ask anything about <strong style={{ fontWeight: 600, color: 'var(--text)' }}>{context}</strong>. Try a suggested question:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {questions.map(q => (
+                  <button key={q} className="ac-question-btn" onClick={() => send(q)}>{q}</button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              {msgs.map((m, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-start', gap: 8 }}>
+                  {m.role === 'assistant' && (
+                    <img
+                      src="/chat-mascot.jpeg"
+                      alt="Claude"
+                      style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1px solid var(--accent-mid)', marginTop: 2 }}
+                    />
+                  )}
+                  <div style={{
+                    background:   m.role === 'user' ? 'var(--accent)' : 'var(--s1)',
+                    color:        m.role === 'user' ? '#fff' : 'var(--text)',
+                    border:       m.role === 'user' ? 'none' : '1px solid var(--b0)',
+                    borderRadius: m.role === 'user' ? '12px 12px 4px 12px' : '4px 12px 12px 12px',
+                    padding:      '10px 14px',
+                    maxWidth:     '82%',
+                    fontSize:     13,
+                    lineHeight:   1.65,
+                    fontWeight:   m.role === 'user' ? 500 : 300,
+                    wordBreak:    'break-word',
+                  }}>
+                    {m.role === 'assistant'
+                      ? <MdMsg text={m.content} />
+                      : m.content
+                    }
+                    {loading && i === msgs.length - 1 && m.role === 'assistant' && (
+                      <span className="ac-cursor" />
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div ref={bottomRef} />
+            </>
+          )}
+        </div>
+
+        {/* Input */}
+        <div style={{ padding: '12px 16px', borderTop: '1px solid var(--b0)', display: 'flex', gap: 8, flexShrink: 0 }}>
+          <input
+            ref={inputRef}
+            className="ac-input"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }}
+            placeholder={`Ask about ${context}…`}
+            disabled={loading}
+          />
+          <button
+            className="ac-submit-btn"
+            onClick={() => send(input)}
+            disabled={!input.trim() || loading}
+            data-active={input.trim() && !loading ? '' : undefined}
+          >
+            →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <>
       {compact ? (
@@ -171,97 +360,11 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
         </div>
       )}
 
-      {open && (
-        <div className="ac-backdrop" onClick={() => setOpen(false)}>
-          <div className="ac-panel" onClick={e => e.stopPropagation()}>
-
-            {/* Header */}
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--b0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 28, height: 28, borderRadius: '50%',
-                  background: 'var(--accent-dim)', border: '1px solid var(--accent-mid)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <span style={{ fontSize: 11, color: 'var(--accent)' }}>◆</span>
-                </div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.02em', lineHeight: 1 }}>Claude</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-muted)', letterSpacing: '0.06em', marginTop: 3 }}>{context}</div>
-                </div>
-              </div>
-              <button className="ac-close-btn" onClick={() => setOpen(false)}>×</button>
-            </div>
-
-            {/* Body */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {msgs.length === 0 ? (
-                <>
-                  <p style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 300, lineHeight: 1.65 }}>
-                    Ask anything about <strong style={{ fontWeight: 600, color: 'var(--text)' }}>{context}</strong>. Try a suggested question:
-                  </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {questions.map(q => (
-                      <button key={q} className="ac-question-btn" onClick={() => send(q)}>{q}</button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  {msgs.map((m, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                      <div style={{
-                        background:    m.role === 'user' ? 'var(--accent)' : 'var(--s1)',
-                        color:         m.role === 'user' ? '#fff' : 'var(--text)',
-                        border:        m.role === 'user' ? 'none' : '1px solid var(--b0)',
-                        borderRadius:  m.role === 'user' ? '12px 12px 4px 12px' : '4px 12px 12px 12px',
-                        padding:       '10px 14px',
-                        maxWidth:      '85%',
-                        fontSize:      13,
-                        lineHeight:    1.65,
-                        fontWeight:    m.role === 'user' ? 500 : 300,
-                        whiteSpace:    'pre-wrap',
-                        wordBreak:     'break-word',
-                      }}>
-                        {m.content}
-                        {loading && i === msgs.length - 1 && m.role === 'assistant' && (
-                          <span className="ac-cursor" />
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  <div ref={bottomRef} />
-                </>
-              )}
-            </div>
-
-            {/* Input */}
-            <div style={{ padding: '12px 16px', borderTop: '1px solid var(--b0)', display: 'flex', gap: 8, flexShrink: 0 }}>
-              <input
-                ref={inputRef}
-                className="ac-input"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }}
-                placeholder={`Ask about ${context}…`}
-                disabled={loading}
-              />
-              <button
-                className="ac-submit-btn"
-                onClick={() => send(input)}
-                disabled={!input.trim() || loading}
-                data-active={input.trim() && !loading ? '' : undefined}
-              >
-                →
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {open && mounted && createPortal(modal, document.body)}
 
       <style>{`
         .ac-backdrop {
-          position: fixed; inset: 0; z-index: 50;
+          position: fixed; inset: 0; z-index: 9999;
           display: flex; align-items: center; justify-content: center; padding: 20px;
           background: rgba(13,31,20,0.45); backdrop-filter: blur(4px);
           animation: ac-fade-in 200ms ease forwards;
@@ -270,7 +373,7 @@ export default function AskClaude({ vertical, context, compact = false }: Props)
           background: var(--bg); border: 1px solid var(--b1); border-radius: 16px;
           width: 100%; max-width: 560px; max-height: 80vh;
           display: flex; flex-direction: column; overflow: hidden;
-          box-shadow: 0 24px 64px rgba(13,31,20,0.16);
+          box-shadow: 0 24px 64px rgba(13,31,20,0.18);
           animation: ac-slide-in 420ms cubic-bezier(0.16,1,0.3,1) forwards;
         }
         .ac-trigger-btn {
