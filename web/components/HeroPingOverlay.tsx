@@ -90,30 +90,30 @@ export default function HeroPingOverlay() {
       const rows = grid.length
       const cols = grid[0].length
 
-      // Path length: 5–7 steps per arm
-      const n = 5 + Math.floor(Math.random() * 3)
+      // Wider column zone: cubes are handled by blocked-cell check, not lo/hi alone
+      const lo = Math.floor(cols * 0.36)
+      const hi = Math.max(lo + 14, cols - 2)
+
+      // n (arm length) derived from available column room so cMin < cMax always holds
+      const maxArm = Math.max(3, Math.floor((hi - lo) / 2) - 1)
+      const n = 3 + Math.floor(Math.random() * Math.min(4, maxArm - 2))
 
       // Randomly pick V (converge from above) or ^ (converge from below)
       const fromBelow = Math.random() < 0.45
 
-      // Meeting point must sit in right half with enough room for both arms
-      const lo = Math.floor(cols * 0.52)
-      const hi = Math.floor(cols * 0.88)
-
       let meetR = 0, meetC = 0, valid = false
       for (let a = 0; a < 50; a++) {
-        // Row bounds differ per direction
-        const rMin = fromBelow ? 2       : n + 1
-        const rMax = fromBelow ? rows - n - 1 : Math.floor(rows * 0.72)
+        const rMin = fromBelow ? 2 : n + 1
+        const rMax = fromBelow ? rows - n - 1 : Math.floor(rows * 0.78)
         if (rMin >= rMax) continue
 
         meetR = rMin + Math.floor(Math.random() * (rMax - rMin))
-        // Column must have n clear tiles on each side
+
         const cMin = lo + n
         const cMax = hi - n
-        if (cMin >= cMax) continue
+        if (cMin > cMax) continue
 
-        meetC = cMin + Math.floor(Math.random() * (cMax - cMin))
+        meetC = cMin + Math.floor(Math.random() * Math.max(1, cMax - cMin))
 
         if (!blocked.has(`${meetR},${meetC}`)) { valid = true; break }
       }
