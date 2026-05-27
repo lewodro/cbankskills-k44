@@ -76,6 +76,11 @@ body {
   from { background-position: 0 0,     26px 14px; }
   to   { background-position: 52px 28px, 78px 42px; }
 }
+/* Overlay SVG must translate in lock-step with the background tile pan */
+@keyframes overlayPan {
+  from { transform: translate(0px, 0px); }
+  to   { transform: translate(52px, 28px); }
+}
 
 
 .hero-bg {

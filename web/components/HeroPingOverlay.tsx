@@ -6,7 +6,7 @@ const TILE_W  = 52
 const TILE_H  = 28
 const DX      = 18   // diamond half-width
 const DY      = 10   // diamond half-height
-const CDEPTH  = 13   // mini-crystal cube depth (px)
+const CDEPTH  = 11   // mini-crystal cube depth — DY*1.16 matches large cube proportions
 
 const STEP_MS  = 440  // cinematic pace — each tile step
 const MERGE_MS = 4200 // crystal hold duration
@@ -200,6 +200,8 @@ export default function HeroPingOverlay() {
         pointerEvents: 'none',
         overflow: 'visible',
         zIndex: 0,
+        // Pan in lock-step with .hero-bg diamondPan — same duration/easing
+        animation: 'overlayPan 30s linear infinite',
       }}
     >
       <defs>
