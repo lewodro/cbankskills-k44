@@ -43,6 +43,7 @@ export function getEmbedUrl(videoId: string): string {
     modestbranding:  '1',
     rel:             '0',
     showinfo:        '0',
+    vq:              'large',  // hint 480p as default quality
   })
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`
 }
