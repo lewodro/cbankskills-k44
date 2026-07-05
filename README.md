@@ -10,8 +10,6 @@
 ![verticals](https://img.shields.io/badge/verticals-7-2E8B57?style=flat-square)
 [![X / Twitter](https://img.shields.io/badge/follow-%40claudebankfun-black?style=flat-square&logo=x)](https://x.com/claudebankfun)
 
-> **Contract Address:** `DrTjHTKmYxR2VD5UYCJjeNqwkPEJ7v4Kmix1qxkZpump`
-
 CBANK is a monorepo containing a collection of Claude Skills purpose-built for financial services workflows, plus a Next.js 14 showcase site. Each skill is a standalone `SKILL.md` file — upload the ZIP to `claude.ai/customize/skills` and it becomes a slash command available to your entire Claude workspace. No API keys. No infrastructure. No code required.
 
 ---
